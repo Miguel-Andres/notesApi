@@ -23,7 +23,7 @@ const apiController = {
         const maxId = Math.max(...ids)
         
         
-        const newNote={
+        const newNote={  
            
             id  :   maxId + 1 ,
             content: datoform.content ,
