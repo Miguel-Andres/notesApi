@@ -20,7 +20,7 @@ app.use("/api",apiRouter)
 
 
 // Server Up and PORT
-const PORT = 3000
+const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
   console.log(`Happy Hacking PORT: ${PORT}`)
 })
