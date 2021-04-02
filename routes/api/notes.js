@@ -11,7 +11,7 @@ router.get("/notes/:id",apiController.findNotes)
 
 //Post Notes
 
-router.post("/",apiController.create)
+router.post("/notes",apiController.create)
 
 // Delete Notes
 
