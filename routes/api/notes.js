@@ -13,6 +13,10 @@ router.get("/notes/:id",apiController.findNotes)
 
 router.post("/notes",apiController.create)
 
+//Put Notes
+
+router.put("/notes/:id",apiController.update)
+
 // Delete Notes
 
 router.delete("/notes/:id",apiController.delete)
