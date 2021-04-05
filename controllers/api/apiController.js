@@ -53,11 +53,9 @@ const apiController = {
 
        Note.findById(id)
        .then(result=>{
-         if( result) {
-             res.json(result).status(200) 
-         } else{
-             res.status(404).end()
-         } 
+            //si va 404 no existe el id pero si es el formato 
+         result ?res.json(result).status(200) : res.status(404).end()            
+         
         }).catch(error=>{
             console.log(error)
             res.status(400).send({error: 'malformatted id' })
@@ -66,13 +64,32 @@ const apiController = {
     },
 
     delete: (req, res) => {
-        const id = Number(req.params.id)
-        Note.filter(nota => nota.id !== id)
+        const {id} = req.params
+        Note.findByIdAndDelete(id).then((result)=>{
+          result? res.status(204).end() : res.status(404).end()
+        }).catch(err=>{
+            console.log(err)
+            res.status(400).send({error: 'malformatted id' })
+        })
 
-        res.status(204).end()
+        
+    } ,
+
+    update : (req,res)=>{
+        const {id} = req.params
+        const note = req.body
+
+        const newNoteInfo ={
+            content : note.content ,
+            important : note.important
+        }
+            // {new : true } para que nos muestre los datos actualizados , 
+        Note.findByIdAndUpdate(id,newNoteInfo ,{new :true})
+        .then(result =>{
+            res.json(result)
+        })
+
     }
-
-
 }
 
 module.exports = apiController
