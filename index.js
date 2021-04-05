@@ -24,6 +24,11 @@ app.use("/",indexRouter)
 app.use("/api",apiRouter)
 
 
+// middleware de error
+app.use(function(req, res, next) {
+  res.status(404).send('Sorry cant find that!');
+});
+
 // Server Up and PORT
 const PORT = process.env.PORT 
 app.listen(PORT, () => {
