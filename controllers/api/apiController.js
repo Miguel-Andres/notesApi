@@ -1,53 +1,73 @@
-const notas = require("../../datos/datos.json")
+const mongoose = require("mongoose")
+
+
+const Note = require("../../models/Note")
 
 
 const apiController = {
 
         allNotes: (req, res) => {
-        res.json(notas)
+        Note.find({})
+        .then(result=>{
+
+             res.json(result)
+           
+
+        }).catch(err=>{
+            console.log(err)
+        })
     },
 
     create: (req, res) => {
         const datoform = req.body
 
         //validamos si hay datos 
-        if(!notas || !datoform.content){
+        if(!datoform.content){
             return res.status(400).json({
                 error :" No hay dato"
             })
-        }
-
-
-        const ids = notas.map(nota=>nota.id)
-        // podemos usar uuid para las ids
-        const maxId = Math.max(...ids)
+        } 
         
-        
-        const newNote={  
-           
-            id  :   maxId + 1 ,
+        const newNote= new Note({             
             content: datoform.content ,
             important :typeof datoform.important !== "undefined" ? datoform.important : false ,
             date : new Date().toISOString()
-        }
+        })
        
-    
+            newNote.save({})
+            .then(result=>{
+                 res.status(201).json(result)
+            }).catch(err=>{
+                console.log(err)
+            })
      
 
-        res.status(201).json([newNote] )
+       
     },
 
-    findNotes: (req, res) => {
-        const id = Number(req.params.id)
+    findNotes: (req, res, next) => {
+       
 
-        let note = notas.find(nota => nota.id == id)
+        // Aca explican como es el correcto manejo de errores https://fullstackopen.com/es/part3/guardando_datos_en_mongo_db
+        const id = req.params.id
 
-        note ? res.json(note).status(200) : res.status(404).end()
+       Note.findById(id)
+       .then(result=>{
+         if( result) {
+             res.json(result).status(200) 
+         } else{
+             res.status(404).end()
+         } 
+        }).catch(error=>{
+            console.log(error)
+            res.status(400).send({error: 'malformatted id' })
+        })
+
     },
 
     delete: (req, res) => {
         const id = Number(req.params.id)
-        notas.filter(nota => nota.id !== id)
+        Note.filter(nota => nota.id !== id)
 
         res.status(204).end()
     }
