@@ -31,6 +31,10 @@ app.use(function(req, res, next) {
 
 // Server Up and PORT
 const PORT = process.env.PORT 
-app.listen(PORT, () => {
+
+const server = app.listen(PORT, () => {
   console.log(`Happy Hacking PORT: ${PORT}`)
 })
+
+
+module.exports= {app,server} 
