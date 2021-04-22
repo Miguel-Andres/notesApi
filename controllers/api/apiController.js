@@ -6,19 +6,18 @@ const Note = require("../../models/Note")
 
 const apiController = {
 
-        allNotes: (req, res) => {
-        Note.find({})
-        .then(result=>{
-
+        allNotes: async (req, res) => {
+             
+       try{
+           const result =   await Note.find({})
              res.json(result)
-           
 
-        }).catch(err=>{
-            console.log(err)
-        })
+       }catch (error){
+           console.log(error)
+       }
     },
 
-    create: (req, res) => {
+    create:async (req, res) => {
         const datoform = req.body
 
         //validamos si hay datos 
@@ -34,18 +33,21 @@ const apiController = {
             date : new Date().toISOString()
         })
        
-            newNote.save({})
-            .then(result=>{
-                 res.status(201).json(result)
-            }).catch(err=>{
-                console.log(err)
-            })
+        try {
+            const savedNewNote = await   newNote.save({})
+              res.status(201).json(savedNewNote)
+        } catch (error) {
+            console.log(err)
+        }
+          
+              
+           
      
 
        
     },
 
-    findNotes: (req, res, next) => {
+    findNotes: async (req, res, next) => {
        
 
         // Aca explican como es el correcto manejo de errores https://fullstackopen.com/es/part3/guardando_datos_en_mongo_db

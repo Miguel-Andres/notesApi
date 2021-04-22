@@ -14,10 +14,11 @@ const api = supertest(app)
 beforeEach(async () => {
     await Note.deleteMany({})
 
-    const note1 = new Note(initialNotes[0])
-    await note1.save()
-    const note2 = new Note(initialNotes[1])
-    await note2.save()
+   //sequential
+   for(const note of initialNotes){
+       const noteObject = new Note(note)
+       await noteObject.save()
+   }
 })
 
 test("notes are returned json", async () => {
@@ -76,6 +77,22 @@ test("new note whitout content is not added", async()=>{
 
     const res = await api.get("/api/notes")
     expect(res.body).toHaveLength(initialNotes.length)
+})
+
+
+test("Cuando una nota no existe no puede ser borrada" , async ()=>{
+
+        await api
+    .delete(`/api/notes/2443`)
+    .expect(400)
+
+    
+
+    const res = await api.get("/api/notes")
+    
+    expect(res.body).toHaveLength(initialNotes.length)
+   
+
 })
 
 afterAll(() => {
